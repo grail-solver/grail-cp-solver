@@ -1,0 +1,10 @@
+env/
+.env
+__pycache__
+app/db/__pycache__
+app/auth/__pycache__
+app/utils/__pycache__
+app/models/__pycache__
+app/solver/__pycache__
+app/routers/__pycache__
+app/auth/blacklist_db.txt
