@@ -1,0 +1,11 @@
+Each variable should be defined by:
+
+- id: type(integer)
+- name: type(string)
+- type: Integer,Enum,Float,...
+- domaine_type: INTERVAL
+- domaine_values: [integer] ...
+
+All variables should be rendered in the following format:
+- Variables: {var1: {"id": 1, "name": 'piece', "type": 'Integer', "domaine_type": '...', "domaine_values": '[]'}, var2: ...., ....}
+- If there is "and" OR "or" operator between variable remove and turn each equation into string equation.

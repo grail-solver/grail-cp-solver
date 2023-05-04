@@ -1,0 +1,7 @@
+Each constraint should be equation in the format:
+
+- value_1 <metric> (Var_1)  and value_2 <metric> (Var_2)  and ... (Var_n) <metric> (value_n)
+- Where <metric> is one of [=, <, >, <=, >=, !=], and (value_i) is a numeric value.
+- Here each variable id is concat to "Var_"
+- Constraints: {"eq1": "Var_1+2Var_2-Var_3>=40", "eq2": "Var_1>0", ....}
+

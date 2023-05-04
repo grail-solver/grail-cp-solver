@@ -1,0 +1,2 @@
+Supposons que vous ayez un grille-pain qui ne dispose que d'un seul bouton qui permet de régler le temps de cuisson. Vous devez faire cuire deux toasts en même temps, mais un toast cuit en 3 minutes et l'autre en 5 minutes. Malheureusement, vous ne pouvez pas surveiller les toasts pendant qu'ils cuisent.
+Comment pouvez-vous utiliser le grille-pain pour cuire les toasts de façon à ce qu'ils soient prêts en même temps et que ni l'un ni l'autre ne soit brûlé ?

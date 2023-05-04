@@ -1,0 +1,35 @@
+{
+  "constraints": [
+    {
+      "left_part": [[1, "Var_1"], "+", [1, "Var_2"], "+", [1, "Var_3"]],
+      "relation": "=",
+      "right_part": [100]
+    },
+    {
+      "left_part": [[5, "Var_1"], "+", [50, "Var_2"], "+", [100, "Var_3"]],
+      "relation": "=",
+      "right_part": [1000]
+    },
+    {
+      "left_part": [[1, "Var_1"]],
+      "relation": ">=",
+      "right_part": [1]
+    },
+    {
+      "left_part": [[1, "Var_2"]],
+      "relation": ">=",
+      "right_part": [1]
+    },
+    {
+      "left_part": [[1, "Var_3"]],
+      "relation": ">=",
+      "right_part": [1]
+    }
+  ],
+  "variables": [
+    {"id": 1, "name": "poussins", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[1,100]"},
+    {"id": 2, "name": "cochons", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[1,100]"},
+    {"id": 3, "name": "boeufs", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[1,100]"}
+  ],
+  "llm_status": "success"
+}

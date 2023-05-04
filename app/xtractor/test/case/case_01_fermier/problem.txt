@@ -1,0 +1,4 @@
+Un fermier a 1000$. Avec les 1000$ il souhaite acheter 100 animaux de différentes espèces :
+des poussins, des porcs et des bœufs. On suppose qu'un poussin coûte 5$, un cochon 50$ et
+un boeuf 100$. Il souhaite avoir au moins 1 animal de chaque espèce et veut dépenser tous
+les 1000$ dont il dispose. Combien de poussins, de cochons et de bœufs devrait-il acheter?

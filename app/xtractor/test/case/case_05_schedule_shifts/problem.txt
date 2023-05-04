@@ -1,0 +1,6 @@
+This problem involves scheduling shifts for employees at a restaurant. There are four employees and three shifts per day (morning, afternoon, and evening). Each employee must work exactly one shift per day, and each shift must be staffed by exactly one employee. Additionally, each employee has specified preferred shifts that they would like to work. These preferences are as follows:
+Employee 1: Morning, Afternoon
+Employee 2: Afternoon, Evening
+Employee 3: Evening, Morning
+Employee 4: Afternoon, Evening
+The goal is to create a schedule that satisfies all of these constraints.

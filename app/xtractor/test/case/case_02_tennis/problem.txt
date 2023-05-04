@@ -1,0 +1,4 @@
+Un groupe de 5 amis (Alice, Bob, Charlie, David et Eve) vont participer à un tournoi de tennis en double. Les paires seront formées au hasard. Cependant, il y a deux contraintes :
+Alice et Bob ne veulent pas être dans la même équipe.
+David et Eve veulent être dans la même équipe.
+Combien y a-t-il de façons différentes de former les équipes ?

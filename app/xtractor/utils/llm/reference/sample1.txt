@@ -1,0 +1,14 @@
+Variables: {
+    var1: {"id": 1, "name": "poussins", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": [0,1000]},
+    var2: {"id": 2, "name": "cochons", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": [0,1000]},
+    var3: {"id": 3, "name": "boeufs", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": [0,1000]}
+}
+
+Constraints: {
+    'eq1': "1000 = (5 * Var_1) + (50 * Var_2) + (100 * Var_3)",
+    'eq2': "Var_1 >= 1",
+    'eq3': "Var_2 >= 1",
+    'eq4': "Var_3 >= 1",
+    'eq5': "Var_1 ≥ 2 * Var_3",
+    'eq6': "Var_1 + 10 = Var_2"
+}

@@ -1,0 +1,14 @@
+{
+  "constraints": [
+    {
+      "left_part": [[1, "Var_1"], "+", [1, "Var_2"]],
+      "relation": "=",
+      "right_part": [8]
+    }
+  ],
+  "variables": [
+    {"id": 1, "name": "toast1", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[3,5]"},
+    {"id": 2, "name": "toast2", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[3,5]"}
+  ],
+  "llm_status": "success"
+}

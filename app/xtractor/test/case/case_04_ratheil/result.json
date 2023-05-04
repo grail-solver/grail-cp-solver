@@ -1,0 +1,79 @@
+{
+  "constraints": [
+    {
+      "left_part": [[1, "Var_2"]],
+      "relation": "=",
+      "right_part": [2]
+    },
+    {
+      "left_part": [[1, "Var_3"]],
+      "relation": "=",
+      "right_part": [5]
+    },
+    {
+      "left_part": [[1, "Var_4"]],
+      "relation": "=",
+      "right_part": [2]
+    },
+    {
+      "left_part": [[1, "Var_5"]],
+      "relation": "=",
+      "right_part": [0, 1, 0, 0, 1]
+    },
+    {
+      "left_part": [[1, "Var_6"]],
+      "relation": "=",
+      "right_part": [1, 0, 0, 0, 1]
+    },
+    {
+      "left_part": [[1, "Var_7"]],
+      "relation": "=",
+      "right_part": [5]
+    },
+    {
+      "left_part": [[1, "Var_8"]],
+      "relation": "=",
+      "right_part": [3]
+    },
+    {
+      "left_part": [[1, "Var_1"]],
+      "relation": "<=",
+      "right_part": ["Var_3"]
+    },
+    {
+      "left_part": [[1, "Var_1"], "+", [1, "Var_2"]],
+      "relation": "<=",
+      "right_part": ["Var_3"]
+    },
+    {
+      "left_part": [[1, "Var_1"]],
+      "relation": "<=",
+      "right_part": ["Var_5"]
+    },
+    {
+      "left_part": [[1, "Var_1"]],
+      "relation": "<=",
+      "right_part": ["Var_6"]
+    },
+    {
+      "left_part": [[1, "Var_1"], "+", [1, "Var_2"]],
+      "relation": ">=",
+      "right_part": [[1, "Var_7"], "+", [1, "Var_8"]]
+    },
+    {
+      "left_part": [[1, "Var_1"], "+", [1, "Var_2"]],
+      "relation": ">=", "right_part": ["Var_4"]
+    }
+  ],
+  "variables": [
+    {"id": 1, "name": "productionPlan", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[0,5]"},
+    {"id": 2, "name": "nbItems", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[2]"},
+    {"id": 3, "name": "nbPeriods", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[5]"},
+    {"id": 4, "name": "h", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[2]"},
+    {"id": 5, "name": "d1t", "type": "Enum", "domaine_type": "LIST", "domaine_values": "[0,1,0,0,1]"},
+    {"id": 6, "name": "d2t", "type": "Enum", "domaine_type": "LIST", "domaine_values": "[1,0,0,0,1]"},
+    {"id": 7, "name": "q1,2", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[5]"},
+    {"id": 8, "name": "q2,1", "type": "Integer", "domaine_type": "INTERVAL", "domaine_values": "[3]"}
+  ],
+  "llm_status": "success"
+}
