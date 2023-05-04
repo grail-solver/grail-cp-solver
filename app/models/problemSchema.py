@@ -14,7 +14,11 @@ class Problem(BaseModel):
     content: float
     user_id: int
 
+# class DataIn(BaseModel):
+#     variables: List[VariableIn]
+#     constraints: List[ConstraintIn]
+#     # optimization: List[OptimizationIn]
+
+
 class DataIn(BaseModel):
-    variables: List[VariableIn]
-    constraints: List[ConstraintIn]
-    optimization: List[OptimizationIn]
+    problem: str

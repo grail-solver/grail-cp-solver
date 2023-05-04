@@ -5,11 +5,11 @@ from app.db.tables import VariableType, DomainType
 
 
 class VariableIn(BaseModel):
-    id: List[int]
+    id: List[str]
     name: List[str]
     type: List[str]
     domain_type: List[str]
-    domain_value: List[List[int]]
+    domain_value: List[str]
     problem_id: int
 
 
@@ -18,5 +18,5 @@ class Variable(BaseModel):
     name: List[str]
     type: List[str]
     domain_type: List[str]
-    domain_value: List[List[int]]
+    domain_value: List[str]
     problem_id: int
