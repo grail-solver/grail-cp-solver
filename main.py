@@ -6,13 +6,9 @@ from app.routers import solver
 
 app = FastAPI(title="Grail Solver")
 
-origins = [
-    "http://localhost:5500",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,4 +25,4 @@ async def shutdown():
     await database.disconnect()
 
 app.include_router(user.router,prefix="/auth", tags=["Authentication"])
-app.include_router(solver.router,prefix="/solve", tags=["Solver"])
+app.include_router(solver.router,prefix="/solver", tags=["Solver"])
