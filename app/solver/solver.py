@@ -1,25 +1,31 @@
 from ortools.sat.python import cp_model
 import numpy as np
+import ast
 
 class AllSolutionsPrinter(cp_model.CpSolverSolutionCallback):
-    def __init__(self, variables, solver):
+    def __init__(self, variables):
         cp_model.CpSolverSolutionCallback.__init__(self)
         self.__variables = variables
-        self.__solver = solver
         self.__solution_count = 0
         self.__all_solutions = []
 
     def on_solution_callback(self):
         self.__solution_count += 1
-        print('Solution %i:' % self.__solution_count)
+        one_solution = []
         for variable in self.__variables:
-            self.__all_solutions.append(
+            one_solution.append(
                 {
                     'var_name': variable.Name(),
-                    'value': self.__solver.Value(variable)
+                    'value': self.Value(variable)
                 }
             )
-            # print('%s = %i' % (variable.Name(), self.Value(variable)))
+        self.__all_solutions.append(one_solution)
+        if self.__solution_count >= 100:
+            self.StopSearch()
+    
+    @property
+    def all_solutions(self):
+        return self.__all_solutions
 
 
 def get_optimal_solutions(solver, model, all_variables):
@@ -32,7 +38,7 @@ def get_optimal_solutions(solver, model, all_variables):
                 'value': solver.Value(var)
             })
         opt_solution.append({
-            'Objective value': solver.ObjectiveValue()
+            'objective_value': solver.ObjectiveValue()
         })
         return opt_solution        
     else:
@@ -46,22 +52,17 @@ def main(variables, constraints, optimization):
     
     optimize = False
     all_variables = []
-    variable_list = [[v.id, v.name, v.type, v.domain_type, v.domain_value, v.problem_id] for v in variables]
-    variable_dict_list = [dict(zip(['id', 'name', 'type', 'domain_type', 'domain_value', 'problem_id'], v)) for v in variable_list]
 
-    for var in variable_dict_list:
+    for var in variables:
         all_variables.append(add_variable(var, model))
-
-    ct_list = [[ct.left_part, ct.right_part, ct.metric] for ct in constraints]
-    ct_dict_list = [dict(zip(['left_part', 'right_part', 'metric'], ct)) for ct in ct_list]
-    for ct in ct_dict_list:
+    print("Variables OK")
+    for ct in constraints:
         add_constraint(ct, model, all_variables)
+    print("Constraints OK")
     
-    opt_list = [[opt.exp, opt.type] for opt in optimization]
-    opt_dict_list = [dict(zip(['exp', 'type'], opt)) for opt in opt_list]
-    if(len(opt_dict_list) > 0):
+    if(len(optimization) > 0):
         optimize = True
-        for opt in opt_dict_list:
+        for opt in optimization:
             add_optimization_constraint(opt, model, all_variables)
             
             
@@ -69,28 +70,51 @@ def main(variables, constraints, optimization):
 
 
 def add_variable(variable, model):
-    if (variable["type"][0] == "INTEGER"):
-        if (variable["domain_type"][0] == "INTERVAL"):
-            domain_value = variable["domain_value"][0]
-            first = np.NINF if domain_value[0] == "-" else int(domain_value[0])
-            last = np.Inf if domain_value[1] == "-" else int(domain_value[1])
-            return model.NewIntVar(first, last, variable["name"][0])
+    upper_bound = 1000
+    if (variable["type"] == "Integer"):
+        if (variable["domaine_type"] == "INTERVAL"):
+            if type(variable['domaine_values']) == str:
+                domaine_values = ast.literal_eval(variable["domaine_values"])
+            else:
+                domaine_values = variable["domaine_values"]
+            print(domaine_values)
+            if len(domaine_values) <=1:
+                return model.NewIntVar(domaine_values[0], upper_bound, variable["name"])
+            else:
+                first = upper_bound if domaine_values[0] == "inf" else int(domaine_values[0])
+                last = upper_bound if domaine_values[1] == "inf" else int(domaine_values[1])
+                return model.NewIntVar(first, last, variable["name"])
+            
+    elif (variable["type"] == "Float"):
+        if (variable["domaine_type"] == "INTERVAL"):
+            scale_factor = 10 # The precision we want the variable has, here it will be one digit after the comma.
+            if type(variable['domaine_values']) == str:
+                domaine_values = ast.literal_eval(variable["domaine_values"])
+            else:
+                domaine_values = variable["domaine_values"]
+            if len(domaine_values) <=1:
+                return model.NewIntVar(domaine_values[0], upper_bound, variable["name"])
+            else:
+                first = upper_bound if domaine_values[0] == "-" else int(domaine_values[0] * scale_factor)
+                last = upper_bound if domaine_values[1] == "-" else int(domaine_values[1] * scale_factor)
+                int_var = model.NewIntVar(first, last, variable["name"])
+                return int_var / scale_factor
 
 
 def add_constraint(constraint, model, all_variables):
     left_exp = convert_litteral_expression(constraint["left_part"], all_variables)
     right_exp = convert_litteral_expression(constraint["right_part"], all_variables)
-    if constraint["metric"] == "<=":
+    if constraint["relation"] == "<=":
         model.Add(left_exp <= right_exp)
-    elif constraint["metric"] == ">=":
+    elif constraint["relation"] == ">=":
         model.Add(left_exp >= right_exp)
-    elif constraint["metric"] == "<":
+    elif constraint["relation"] == "<":
         model.Add(left_exp < right_exp)
-    elif constraint["metric"] == ">":
+    elif constraint["relation"] == ">":
         model.Add(left_exp > right_exp)
-    elif constraint["metric"] == "!=":
+    elif constraint["relation"] == "!=":
         model.Add(left_exp != right_exp)
-    elif constraint["metric"] == "==":
+    elif constraint["relation"] == "==":
         model.Add(left_exp - right_exp == 0)
 
 
@@ -109,40 +133,98 @@ def convert_litteral_expression(litt_exp, all_variables):
     for exp in litt_exp :
         if not previous_operator:
             if type(exp) == list:
-                convert_exp+= exp[0] * all_variables[get_variable_id(exp[1])]
-            elif exp in list_of_operators:
-                previous_operator = exp
-            else:
-                convert_exp+= exp
-        else:
-            if type(exp) == list:
-                if previous_operator == "+":
+                if len(exp) <= 1:
+                    convert_exp+= all_variables[get_variable_id(exp[0])]
+                else:
+                    print('Here')
+                    print(exp)
                     convert_exp+= exp[0] * all_variables[get_variable_id(exp[1])]
-                elif previous_operator == "-":
-                    convert_exp-= exp[0] * all_variables[get_variable_id(exp[1])]
-                elif previous_operator == "*":
-                    convert_exp*= exp[0] * all_variables[get_variable_id(exp[1])]
-                elif previous_operator == "/":
-                    convert_exp/= exp[0] * all_variables[get_variable_id(exp[1])]
+                    print('OK')
 
             elif exp in list_of_operators:
                 previous_operator = exp
             else:
+                try:
+                    convert_exp+= int(exp)
+                except Exception:
+                    convert_exp+= all_variables[get_variable_id(exp)]
+        else:
+            if type(exp) == list:
+                coef = 1
+                var_name = ""
+                if len(exp) <= 1:
+                    var_name = exp[0]
+                else:
+                    coef = exp[0]
+                    var_name = exp[1]
+
                 if previous_operator == "+":
-                    convert_exp+= exp
+                    convert_exp+= coef * all_variables[get_variable_id(var_name)]
                 elif previous_operator == "-":
-                    convert_exp-= exp
+                    convert_exp-= coef * all_variables[get_variable_id(var_name)]
                 elif previous_operator == "*":
-                    convert_exp*= exp
+                    convert_exp*= coef * all_variables[get_variable_id(var_name)]
                 elif previous_operator == "/":
-                    convert_exp/= exp
+                    convert_exp/= coef * all_variables[get_variable_id(var_name)]
+
+            elif exp in list_of_operators:
+                previous_operator = exp
+            else:
+                try:
+                    value = int(exp)
+                except Exception:
+                    value = all_variables[get_variable_id(exp)]
+                if previous_operator == "+":
+                    convert_exp+= value
+                elif previous_operator == "-":
+                    convert_exp-= value
+                elif previous_operator == "*":
+                    convert_exp*= value
+                elif previous_operator == "/":
+                    convert_exp/= value
 
     return convert_exp
 
 
 def get_variable_id(variable_name):
     var_id = variable_name.split("_")[1]
-    return int(var_id)
+    return int(var_id)-1
+
+def get_variable_name(var_denom, all_vars):
+    var_id = int(var_denom.split("_")[1]) -1
+    return all_vars[var_id].Name()
+
+
+def get_variables(model):
+    model_proto = model.Proto()
+    variables = []
+    for var_proto in model_proto.variables:
+        var_name = var_proto.name
+        variables.append({'var_name': var_name, 'var_domain': list(var_proto.domain)})
+    return variables
+
+def get_constraints(constraints, all_vars):
+    constraint_strings = []
+    for constraint in constraints:
+        left_part = ""
+        right_part = ""
+        for term in constraint['left_part']:
+            if isinstance(term, list):
+                left_part += f"{term[0]}*{get_variable_name(term[1], all_vars)}"
+            else:
+                left_part += str(term)
+            left_part += " "
+        
+        for term in constraint['right_part']:
+            if isinstance(term, list):
+                right_part += f"{term[0]}*{get_variable_name(term[1], all_vars)}"
+            else:
+                right_part += str(term)
+            right_part += " "
+
+        constraint_strings.append(f"{left_part} {constraint['relation']} {right_part}")
+
+    return constraint_strings
 
 
 def solve(variables, constraints, optimization):
@@ -152,7 +234,10 @@ def solve(variables, constraints, optimization):
     if with_opt:
         return get_optimal_solutions(solver, model, all_var)
     else:
-        all_solutions_printer = AllSolutionsPrinter(all_var, solver)
-        solver.SearchForAllSolutions(model, all_solutions_printer)
-        print(all_solutions_printer.__all_solutions)
-        return all_solutions_printer.__all_solutions
+        solver.parameters.enumerate_all_solutions = True
+        all_solutions_printer = AllSolutionsPrinter(all_var)
+        solver.Solve(model, all_solutions_printer)
+        formatted_vars = get_variables(model)
+        formatted_ct = get_constraints(constraints, all_var)
+
+        return all_solutions_printer.all_solutions, formatted_vars, formatted_ct
