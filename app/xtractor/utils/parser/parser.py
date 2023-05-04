@@ -31,6 +31,7 @@ def format_variables(variables_text):
         variable_name = variable_match[0]
         variable_text = "{" + variable_match[1] + "}"
         variable = eval(variable_text)
+        variable['domaine_values'] = eval(variable['domaine_values'])
         variables[variable_name] = variable
 
     variables_array = [variable for variable in variables.values()]
