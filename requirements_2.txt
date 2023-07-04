@@ -1,0 +1,9 @@
+openai
+dotenv
+ortools
+numpy
+fastapi
+passlib
+pydantic
+sqlalchemy
+python-jose
